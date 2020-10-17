@@ -57,3 +57,12 @@
       HOST_ETC: /hostfs/etc
       HOST_PROC: /hostfs/proc
       HOST_SYS: /hostfs/sys
+
+- name: Fetch Telegraf version from docker container
+  shell: "docker inspect telegraf  | grep -i TELEGRAF_VERSION  | sed 's/[[:space:]]*//g' | sed 's/\"//g' | sed 's/TELEGRAF_VERSION=//g'"
+  register: _telegraf_docker_version
+  changed_when: false
+
+- name: Set Telegraf agent version
+  set_fact:
+    telegraf_agent_version: "{{ _telegraf_docker_version.stdout }}"
